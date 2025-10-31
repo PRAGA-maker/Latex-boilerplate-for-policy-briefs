@@ -1,0 +1,375 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{multicol}   % Required for two-column layout
+\usepackage{tikz} % For drawing circles
+\usepackage{fancyhdr} % For custom headers
+\usepackage{lastpage} % For page references
+\usepackage{array} % For m column type in tables
+\usepackage{ragged2e} % For better text alignment
+\usepackage{pdfpages} % For including PDF pages
+\usepackage{url} % For URL formatting in footnotes
+\usepackage{hyperref} % For better URL formatting in footnotes
+
+% Redefine \url to work like \href (happens after hyperref loads)
+% Use \nolinkurl for display text to avoid underscore issues
+\AtBeginDocument{%
+  \let\oldurl\url
+  \renewcommand{\url}[1]{\href{#1}{\nolinkurl{#1}}}
+}
+
+% --- PAGE GEOMETRY ---
+
+% Set standard margins for a clean look
+
+\usepackage[
+  a4paper,
+  margin=1in,
+  heightrounded,
+]{geometry}
+
+% --- CUSTOM COMMANDS ---
+
+% Make footnotes at least 5pts smaller (using \tiny which is ~5pt)
+\renewcommand{\footnotesize}{\tiny}
+
+% Command for a standard table of contents entry.
+
+% It includes the text content and a horizontal rule below it.
+
+% #1: Section label (e.g., SECTION 1)
+
+% #2: Page range (e.g., P. 04 -- 07)
+
+% #3: Title (e.g., The Last Supper and Great Schism)
+
+% Command to draw section indicator circles
+% #1: which circle should be filled (1-4), 0 for all empty
+\newcommand{\sectioncircles}[1]{%
+  \begin{tikzpicture}[baseline=-0.5ex]
+    \foreach \i in {1,2,3,4} {
+      \ifnum \i=#1
+        % Filled circle - bigger size
+        \filldraw[black] (0.5*\i-0.4,0) circle (0.18cm);
+      \else
+        % Empty circle - bigger size
+        \draw[black, line width=1pt] (0.5*\i-0.4,0) circle (0.18cm);
+      \fi
+    }
+  \end{tikzpicture}%
+}
+
+% Command for large recommendation numbers
+% #1: the number to display (1-5)
+% Numbers are inline with text baseline, left-aligned
+% Top of number aligns with top of text line
+\newcommand{\recommendationnum}[1]{%
+  \raisebox{0.6ex}{\fontsize{28}{32}\selectfont\bfseries #1}\hspace{0.5em}%
+}
+
+% ---------- TOC ENTRY MACROS ----------
+% Compact, left-flush two-column line with a rule under each (except last)
+\newcommand{\TOCEntry}[4]{%
+  \noindent
+  \hbox to \textwidth{%
+    \parbox[t]{0.72\textwidth}{\small #1\\[0.6em]{\Large\bfseries #3}}%
+    \hfil
+    \parbox[t]{0.28\textwidth}{\raggedleft\small #2\\[0.5ex]\sectioncircles{#4}}%
+  }\par
+  \vspace{1.25em}%
+  \rule{\textwidth}{0.4pt}\par
+  \vspace{2em}%
+}
+
+\newcommand{\TOCEntryLast}[4]{%
+  \noindent
+  \hbox to \textwidth{%
+    \parbox[t]{0.72\textwidth}{\small #1\\[0.6em]{\Large\bfseries #3}}%
+    \hfil
+    \parbox[t]{0.28\textwidth}{\raggedleft\small #2\\[0.5ex]\sectioncircles{#4}}%
+  }\par
+}
+
+% ---------- PAGE STYLE FOR TOC ----------
+\setlength{\headheight}{0.82in}
+\fancypagestyle{tocstyle}{%
+  \fancyhf{}%
+  % True horizontal centering of the header art
+  \fancyhead[C]{\makebox[\textwidth]{\includegraphics[height=0.75in]{header.png}}}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0.4pt}%
+}
+
+\begin{document}
+
+% Remove page numbers and headers from the title page and TOC
+
+\pagestyle{empty}
+
+% Include the first page of the intro PDF
+\includepdf[pages=1,pagecommand={}]{"Bridging the Language Gap Expanding Bilingual Behavioral Health Access in California (3).pdf"}
+
+\newpage
+
+% ---------- TOC PAGE ----------
+\pagestyle{tocstyle}
+
+% Vertically center the whole block
+\vspace*{\fill}
+\begingroup
+\setlength{\parindent}{0pt}   % no paragraph indent on this page
+\raggedright                  % force left alignment (no hidden centering)
+
+{\LARGE\bfseries Table of Contents}\par
+\vspace{0.4em}
+\rule{\textwidth}{0.4pt}\par
+\vspace{2em}
+
+\TOCEntry     {SECTION 1}{P. 01 -- 01}{Executive Summary}{1}
+\TOCEntry     {SECTION 2}{P. 02 -- 05}{Problem Analysis}{2}
+\TOCEntry     {SECTION 3}{P. 06 -- 07}{Consensus \& Comparisons}{3}
+\TOCEntryLast {SECTION 4}{P. 08 -- 09}{Recommendations}{4}
+
+\endgroup
+\vspace*{\fill}
+
+\newpage
+
+% --- SET UP HEADERS AND FOOTERS ---
+
+% Configure fancy headers
+\pagestyle{fancy}
+\fancyhf{} % Clear all headers and footers
+
+% Set header height
+\setlength{\headheight}{0.75in}
+
+% Define header content
+\fancyhead[L]{%
+  % Logo on the left, vertically centered with right side elements
+  \raisebox{\dimexpr-0.5\height+1pt\relax}{\includegraphics[height=0.375in]{logo.png}}%
+}
+
+% Header for right side will be set before each section starts
+
+% Add divider lines in header and footer
+\renewcommand{\headrulewidth}{0.4pt}  % Header divider line
+\renewcommand{\footrulewidth}{0.4pt}  % Footer divider line
+\addtolength{\footskip}{3pt}  % Add 3pt padding above footer divider
+
+% Set footer content (empty but with divider line)
+\fancyfoot[L]{}
+\fancyfoot[C]{}
+\fancyfoot[R]{}
+
+% Set page counter so Executive Summary starts at page 1
+\setcounter{page}{1}
+
+% Set header for Section 1 (Executive Summary)
+\fancyhead[R]{%
+  % Circles on the right, then page number - all vertically centered
+  \raisebox{\dimexpr-0.5\height+1pt\relax}{%
+    \sectioncircles{1}\hspace{0.3cm}% Circle 1 filled for Executive Summary
+    \thepage%
+  }%
+}
+
+\section*{Executive Summary}
+
+\begin{multicols}{2} % Start of the two-column environment
+
+California’s behavioral and behavioral health systems are not equipped to handle the state’s linguistic diversity. While 44\% of Californians speak a non-English language at home, in mental healthcare, only 11.7\% of services are provided in Spanish, and less than 1\% in major Asian languages. These language barriers reduce trust and access to care, lead to misdiagnosis and medication errors, and widen health inequities, disproportionately affecting minority communities. 
+
+Despite billions in state and federal funding for county-run mental health plans, California’s \$9 billion service gap is exacerbated by the lack of standardization in mental health training across professions, making it difficult to define consistent competencies or develop specialized pathways such as bilingual counseling.
+
+California has made several recent investments in the behavioral healthcare realm, such as through the enactment of the Behavioral Health Infrastructure Bond Act (AB 531), which will generate \$6.4 billion in funding for behavioral health initiatives (\$100 million of which will be spent toward expanding a culturally competent and well-trained behavioral health workforce). However, both a multibillion-dollar service gap and linguistic inequity remain major issues within the state despite these efforts.
+ 
+Although bilingual counseling is underrepresented in academia, partially due to its personal nature, research has converged on key benefits to counselors, clients, and service providers. Studies show counselors and clients alike see potential for better interpersonal connections, and language switching has been shown to empower clients in counseling settings. Bilingual counselors also allow the provision of service to previously inaccessible demographics. However, due to a lack of standardization, formal bilingual counseling training programs are rare, and counselors face anxiety when counseling in non-English languages.
+
+Market incentives suggest that mental health workers should be eager to provide bilingual care, since doing so would expand their client base and increase income. However, in 2022 California lacked roughly one-third of the psychiatrists and therapists needed to meet projected demand. Most resources remain concentrated in English and Spanish language services rather than in services for linguistic minorities. 
+
+State-based investment, such as in Indiana, Massachusetts, and Minnesota, into loan assistance for behavioral health professionals has been widespread and successful in expanding the workforce in rural and underserved areas. With many counties in California lacking sufficient behavioral healthcare personnel to meet demand among diverse populations, the state would benefit from increased funding into similar channels while focusing specifically on loan assistance to bilingual trainees. Successful implementation of such policies would effectively break down financial barriers to behavioral health careers among non-English speakers.
+
+Within this context, the Courtyards Institute recommends the establishment of the Bilingual Counseling Loan Assistance Program, wherein the California Health and Human Services Agency approves statewide applicants for loan assistance in training for certification as behavioral health professionals. Applicants may be approved under the condition that they are fluent in one of the state’s eight most common Low English Proficiency (LEP) languages and commit to three years of service in an underserved county following certification. Counties would receive program participants who practice in one of the county’s top three LEP languages or in a language spoken by at least 2\% of the population. Clientele of program participants residing outside the practitioner's assigned area would be limited to a maximum of 25\%, and services to external clients would only be allowed if (1) the counseling service is conducted virtually and (2) the client’s language is not served by the loan assistance program in the client’s county of residence. The program would be accompanied by a state committee standardizing curricula for bilingual counseling training addressing critical issues such as language switching and dialects. In addition, both needs assessments and evaluations would be conducted to gauge behavioral healthcare demand and collect data on demographics, clientele size, and post-commitment county retention of program participants in order to inform modifications and improvements to the loan assistance program.
+
+\end{multicols} % End of the two-column environment
+
+\newpage
+
+% Update header for Section 2 (Problem Analysis)
+\fancyhead[R]{%
+  % Circles on the right, then page number - all vertically centered
+  \raisebox{\dimexpr-0.5\height+1pt\relax}{%
+    \sectioncircles{2}\hspace{0.3cm}% Circle 2 filled for Problem Analysis
+    \thepage%
+  }%
+}
+
+\section*{Problem Analysis}
+
+\begin{multicols}{2} % Start of the two-column environment
+\subsection*{California Linguistic Breakdown and Healthcare Demand}
+\vspace{-1.55\baselineskip}\vspace{-9pt} % tighten gap only for this heading (extra ~9px)
+
+California's behavioral health workforce does not reflect the state's linguistic diversity, leaving millions of limited English proficiency (LEP) residents underserved and at risk of significant harm.\footnote{California Health Care Foundation, ``Language Barriers and Health Equity: The Challenges Faced by Californians with Limited English Proficiency,'' \url{https://www.chcf.org/resource/californians-with-limited-english-proficiency/}, August 2024.}
+
+Nearly 2.7 million adults in California are classified as LEP, and 44\% of residents speak a language other than English at home.\footnote{California Attorney General's Office, ``Limited English,'' \url{https://oag.ca.gov/consumers/limited-english}.}\footnote{Public Policy Institute of California, ``California's Population,'' \url{https://www.ppic.org/publication/californias-population/}.} As individuals generally speak the language they are most comfortable at home, this is a valuable proxy for language preferences across the population. While 28\% of Californians speak Spanish, only 20.8\% of behavioral health practitioners provide services in Spanish, and representation for Asian American and Pacific Islander (AAPI) languages is even lower.\footnotemark[2]\footnotemark[3] Just 4.1\% of practitioners speak AAPI languages such as Mandarin (1\%), Tagalog (0.9\%), Cantonese (0.6\%), Korean (0.6\%), Hindi (0.6\%), or Vietnamese (0.5\%), despite 4.9\% of Californians speaking Tagalog and nearly 4\% speaking Chinese.\footnote{Immigrant Data CA, ``Languages Spoken,'' \url{https://immigrantdataca.org/indicators/languages-spoken?breakdown=top-languagesandgeo=02000000000006000}.}
+
+Even fewer mental health services are provided in these languages, with only 11.7\% of mental health-related services conducted in Spanish in California healthcare facilities in 2021, while the most and Asian languages were served far less: Vietnamese at 0.34\%, Cantonese at 0.23\%, and Mandarin at 0.22\%.\footnote{California Department of Health Care Access and Information, ``Preferred Languages Spoken in California Facilities,'' \url{https://hcai.ca.gov/visualizations/preferred-languages-spoken-in-california-facilities/}.} In 2022, over 950,000 Californians had at least one visit to a California health facility for a specialty mental health service (SMHS). Of these interactions, 802,100 were in English, 133,500 were in Spanish, and the next most common language was Vietnamese at 6,300. Among the 290,000 Californians who had at least five SMHS visits, 264,700 primarily spoke English, 23,300 spoke mainly Spanish, and the next most represented language was again Vietnamese at 1,400.\footnote{California Department of Health Care Services, ``Adult MHS Demographic Dashboard (AB470),'' \url{https://behavioralhealth-data.dhcs.ca.gov/pages/78f6f2f7741045ebbbdaec9b2ba799e5}, 2022.} These figures confirm our suspicion that the California mental health system does not work for those requiring services outside of the English monopoly that exists among healthcare facilities across the state.
+
+{
+\begin{center}
+\includegraphics[width=0.98\columnwidth,keepaspectratio]{image.png}
+\vspace{0.3em}
+\par
+{\small Figure 1: Map of English Proficiency of California Medicare Beneficiaries, by County. Note some counties are not identified to protect patient privacy.\footnote{California Department of Health Care Services, ``Cultural and Linguistic Demographics of California Medicare Population,'' \url{https://www.dhcs.ca.gov/services/Documents/Cultural-Linguistic-Demographics-California-Medicare-Population.pdf}, 2023.}}
+\end{center}
+}
+
+\vspace{0.5cm}
+
+Language barriers reduce access to care, increase misdiagnosis and medication errors, and exacerbate health disparities, and patients who cannot communicate in their preferred language are less likely to regularly access primary care and more likely to rely on emergency services.\footnote{PubMed Central, ``Impacts of English language proficiency on healthcare access, use, and outcomes among immigrants: a qualitative study,'' \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC8314461/}.} They often miss appointments or misunderstand diagnosis and treatment instructions, which reduces adherence and worsens health outcomes.\footnote{Los Angeles Times, ``Language barriers in healthcare,'' \url{https://www.latimes.com/archives/la-xpm-2008-mar-21-me-language21-story.html}, March 21, 2008.}
+
+LEP individuals also face higher risks of discrimination, poorer health status, and limited access to telehealth or a consistent source of care, and many rely on informal interpreters such as friends or family, increasing the likelihood of misunderstandings and compromising patient safety.\footnotemark[1] In California, 29\% of LEP residents report using informal interpreters, and 23\% are unaware of their legal right to professional language services.\footnotemark[1]
+
+Insufficient language representation among behavioral health workers drives higher rates of untreated mental illness, increases emergency department visits, and widens health inequities, disproportionately affecting Latino, Asian, and Pacific Islander communities, with language gaps compounded by economic disparities, limited insurance coverage, and systemic bias.\footnote{Loma Linda University Institute for Health Policy and Leadership, ``Majoring in Minority: Increasing Minority Representation in Healthcare in California,'' \url{https://ihpl.llu.edu/blog/majoring-minority-increasing-minority-representation-healthcare-california}.}\footnote{UCLA Center for Health Policy Research, ``Language Barriers and Health Equity Challenges Faced by Californians with Limited English Proficiency,'' \url{https://healthpolicy.ucla.edu/our-work/publications/language-barriers-and-health-equity-challenges-faced-californians-limited-english-proficiency}.}
+
+\subsection*{California Healthcare Structure and Paths to Licensure}
+
+The state of California and the federal government are the primary sources of mental health services funding in California, while counties are responsible for implementation and reporting to the state government. In 2021, the state spent approximately \$2.9 billion providing aid to those qualifying for county-based mental health plans, with an average per capita annual cost of \$5,648 for 509,600 adults.\footnote{RAND Corporation, ``California Mental Health Funding Gap Exceeds \$9 Billion Annually; Services Need Expansion to Aid All Those in Need,'' \url{https://www.rand.org/news/press/2025/04/california-mental-health-funding-gap-exceeds-9-billion.html}, April 2025.} The state also funds Medi-Cal's Specialty Mental Health Services (SMHS), which provides care through county mental health plans.\footnote{California Department of Health Care Services, ``Medi-Cal Specialty Mental Health Services,'' \url{https://www.dhcs.ca.gov/services/Pages/Medi-cal_SMHS.aspx/}.} Services covered include rehabilitation, such as therapy, medication, crisis intervention, and certain psychiatric services,\footnote{Disability Rights California, ``Medi-Cal Specialty Mental Health Services Covered by County Mental Health Plans (Adults),'' \url{https://www.disabilityrightsca.org/publications/medi-cal-specialty-mental-health-services-covered-by-county-mental-health-plans-adults}.} in addition to early screening services for youth under 21 years old.\footnote{Disability Rights California, ``Medi-Cal Specialty Mental Health Services Covered by County Mental Health Plans,'' \url{https://www.disabilityrightsca.org/publications/medi-cal-specialty-mental-health-services-covered-by-county-mental-health-plans}.} The state plans to integrate the SMHS program with substance use disorder treatment services, requiring counties to combine their administration by January 1, 2027.\footnote{California Department of Health Care Services, ``Behavioral Health Administrative Integration,'' \url{https://www.dhcs.ca.gov/Pages/Behavioral-Health-Administrative-Integration.aspx}.}
+
+The state funds mental health services through the Behavioral Health Services Act, a 1\% tax on personal incomes over \$1 million. The Behavioral Health Services Act was passed as part of California Proposition 1, modifying the preexisting Mental Health Services Act to focus on how funding can be used. It prioritizes services for those with more severe mental health needs, while adding a focus on substance use disorders. It was accompanied by the Behavioral Health Infrastructure Bond Act, which authorized \$6.4 billion in bonds to finance behavioral health initiatives. Historically, the state has also received grants from the federal Substance Abuse and Mental Health Services Administration (SAMHSA). Of particular importance have been the Community Mental Health Services block grant and the Recovery Services Block Grant.\footnote{California Health Care Foundation, ``California Behavioral Health Data Landscape,'' \url{https://www.chcf.org/wp-content/uploads/2024/12/CABHDataLandscape2024.pdf}, December 2024.} With the upcoming restructuring of the Department of Health and Human Services, however, the fate of SAMHSA is unknown, as it will be combined with various other offices to create the Administration for a Healthy America.\footnote{U.S. Department of Health and Human Services, ``HHS Restructuring,'' \url{https://www.hhs.gov/press-room/hhs-restructuring-doge.html}.}
+
+There is a notable shortage of behavioral health service provision in the state of California. As of 2016, California had over 80,000 mental health professionals, with the Bay Area having the highest per capita ratio for all occupations except psychiatric technicians, and the Inland Empire and San Joaquin Valley having relatively low per capita ratios for all professions except psychiatric technicians.\footnote{University of California, San Francisco Healthforce Center, ``California's Current and Future Behavioral Health Workforce,'' \url{https://healthforce.ucsf.edu/sites/g/files/tkssra14981/files/California\%E2\%80\%99s_Current_and_Future_Behavioral_Health_Workforce.pdf}, 2016.} However, RAND found a funding gap of over \$9 billion in 2021 between demand and supply for mental health services.\footnotemark[11] This is corroborated by data from 2022-23, with the California Department of Health Care Access and Information projecting that all 58 counties would face a shortage across all behavioral health roles in 2025. This shortage was exacerbated in the aforementioned low-employment regions, as well as the Northern and Sierra regions.\footnote{California Department of Health Care Access and Information, ``Supply and Demand Modeling for California's Behavioral Health Workforce,'' \url{https://hcai.ca.gov/visualizations/supply-and-demand-modeling-for-californias-behavioral-health-workforce/}, 2022-23.} This meets the 2016 predictions of a shortage in psychiatrists, psychologists, and licensed clinical social workers.
+
+The California Board of Psychology requires the possession of a qualifying doctoral degree with a significant emphasis in psychology. Furthermore, it requires 3,000 hours of supervised professional experience, with 1,500 hours required after the completion of a doctoral degree. Psychologists must pass training in human sexuality, alcoholism/chemical dependency, domestic and child abuse, aging and long-term care, and suicide risk assessment. Finally, they must also pass the Examination for Professional Practice in Psychology, the California Psychology Laws and Ethics Examination, and background checks to become a licensed psychologist.
+
+Licensed clinical social workers are required to possess a master's degree from a school of social work and two years of post master's experience in mental health, as well as licensure from the California Board of Behavioral Science Examiners. Clinical psychologists are required to have a doctorate in psychology and at least two years of clinical experience, and licensed clinical social workers are required to have a master's degree in social work, and two years of post master's experience, as well as a license.\footnote{California Department of Health Care Services, ``Licensure Requirements for Psychiatric Health Facilities,'' \url{https://www.dhcs.ca.gov/services/MH/Documents/LicReqPHF_Article1.pdf}.} To obtain supervised experience, prospective clinical counselors are required to register as Associate Professional Clinical Counselors. This is followed by a background check, and after accruing enough experience, must take the National Clinical Mental Health Counseling Examination and apply for licensure.\footnote{California Board of Behavioral Sciences, ``Licensed Professional Clinical Counselor,'' \url{https://www.bbs.ca.gov/applicants/lpcc.html}.} It is worth noting that there is no existing pathway to licensure that focuses specifically on bilingual counseling.
+
+The specific coursework required to obtain licensure varies, with a lack of standardization or transparency. For example, a psychologist's ``human sexuality'' training is merely listed as ``the study of a human being as a sexual being and how a human being functions with respect thereto''\footnote{California Legislative Information, Business and Professions Code Section 25, \url{https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=BPCandsectionNum=25.}.}, only requiring a minimum of ten hours of training and that it be obtained in some capacity through an accredited educational institution, professional association, or government.\footnote{Westlaw, California Code of Regulations, \url{https://govt.westlaw.com/calregs/Document/IE7972FE34C8111EC89E5000D3A7C4BC3}.} However, the psychologist's coursework in alcohol/chemical substance dependency is much more specific, with a listed breakdown of required topics such as ``Diagnosing and differentiating alcoholism and substance abuse in patients referred for other clinical symptoms'' and ``Cultural and ethnic considerations''.\footnote{Westlaw, California Code of Regulations, \url{https://govt.westlaw.com/calregs/Document/IE7A49D634C8111EC89E5000D3A7C4BC3}.} Similarly, some requirements for clinical social workers and professional clinical counselors are standardized while others are not. This lack of standardization makes it difficult to establish what topics should be taught in potential bilingual counseling training programs, since there is no standardized curriculum or list of topics for many aspects of monolingual psychologists, counselors, and social workers.
+
+\subsection*{Current Statutes and State Initiatives}
+
+Since the enactment of the Knox-Keene Health Care Services Act of 1975, health care service plans and health insurers have been required to provide insureds with appropriate access to language assistance in obtaining health care services. SB 223 extended the 1975 act's mandates, requiring that free oral language interpretation be provided to LEP insureds. Plans cannot force clients to bring their own interpreters or rely on non-qualified staff, except in rare cases of emergency. In addition, to ensure that all insureds understand healthcare information, insurers must provide translated written notices in the top 15 languages spoken by LEPs in the state of California. SB 223 also created California state notification requirements so that insureds are clearly made aware of their right to oral interpretation in a timely manner. California has no such mandates for access to bilingual counseling, but the state's investment in modern mental health programs has been substantial, even if the considerable service gap remains.
+
+In 2024, voters passed Prop. 1, which enacted the Behavioral Health Services Act, allocating funding to tackle substance abuse and serious mental illnesses. Prop. 1 also passed the Behavioral Health Infrastructure Bond Act (AB 531), which will generate \$6.4 billion in tax funds to spend toward BHSA's initiatives and expanding the behavioral health workforce, in addition to adding treatment beds in facilities and expanding supportive housing statewide.\footnote{California Legislative Information, Assembly Bill 531 (2023-2024), \url{https://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=202320240AB531}, 2023-2024.} At least \$100 million (three percent per year) will be spent annually on expanding a ``culturally competent and well-trained behavioral health workforce.''\footnote{California Department of Health Care Access and Information, ``Behavioral Health Transformation (Proposition 1),'' \url{https://hcai.ca.gov/workforce/initiatives/behavioral-health-transformation-proposition-1/}.}
+
+California's BH-Connect Initiative specifically seeks to recruit behavioral health professionals and was approved for \$1.9 billion for the period 2025--2029.\footnote{California Department of Health Care Services, ``BH-CONNECT,'' \url{https://www.dhcs.ca.gov/CalAIM/Pages/BH-CONNECT.aspx}.} In 2021, Gov. Gavin Newsom began the five-year Children and Youth Behavioral Health Initiative (CYBHI), which invests an additional \$4.4 billion into behavioral health services for under-25 California residents. The initiative's goals include expanding the bilingual workforce and providing services regardless of financial circumstances.\footnote{California Department of Health Care Access and Information, ``Children and Youth Behavioral Health Initiative,'' \url{https://hcai.ca.gov/workforce/initiatives/children-and-youth-behavioral-health-initiative/}, 2021.} One key component is the Behavioral Health Scholarship Program (BHSP), which awards up to \$35,000 to professionals training to become licensed behavioral health professionals. Awardees must commit to 12 months of direct care work in underserved areas of the state. The scholarship gives priority to speakers of one of the 17 Medi-Cal threshold languages.\footnote{California Department of Health Care Access and Information, ``California to Award Scholarships to Grow the State's Behavioral Health Workforce,'' \url{https://hcai.ca.gov/california-to-award-scholarships-to-grow-the-states-behavioral-health-workforce/}.}
+
+In Sept. 2025, Gov. Newsom announced a new round of \$127 million in funding to 23 local Californian governments and communities for behavioral health services, adding to the \$617 million that had been distributed under Proposition 47 and Proposition 36.\footnote{Office of Governor Gavin Newsom, ``State Builds Upon Billions of Dollars in Behavioral Health Investment by Awarding \$127 Million in Grants for Prop. 36 and Prop. 47,'' \url{https://www.gov.ca.gov/2025/09/26/state-builds-upon-billions-of-dollars-in-behavioral-health-investment-by-awarding-127-million-in-grants-for-prop-36-and-prop-47/}, September 26, 2025.} In addition, the Behavioral Health Scholarships and Golden State Social Opportunities programs disbursed \$15 to \$16 million to 610 students in one cycle. The programs focus on training professionals for work in underserved areas and from disadvantaged backgrounds.\footnote{California Department of Health Care Access and Information, ``California Supports Students Through \$15.6 Million in Behavioral Health Scholarships,'' \url{https://hcai.ca.gov/california-supports-students-through-15-6-million-in-behavioral-health-scholarships/}.}
+
+Therefore, California has made numerous efforts to increase funding toward healthcare, and in some cases specifically behavioral health. However, both a multibillion-dollar service gap and linguistic inequity remain major issues within the state despite these efforts.
+
+\subsection*{Economic Significance}
+
+Market incentives suggest that mental health workers should be eager to provide bilingual care, since doing so would expand their client base and increase income, especially since California's Mental Health Parity Act requires all state-regulated commercial health plans and insurers to provide full coverage for the treatment of all mental health conditions.\footnote{California Department of Managed Health Care, ``Behavioral Health Care,'' \url{https://www.dmhc.ca.gov/HealthCareinCalifornia/GettheBestCare/BehavioralHealthCare.aspx}.} Therefore, the limited number of visits from patients who do not speak English or Spanish is unlikely to be explained by financial barriers alone.
+
+However, the same act has also contributed to a large surge in demand for mental health services, which has left clinics overburdened and many Californians on long waitlists. Despite strong government support for mental health programs, the California Future Health Workforce Commission estimates that more than two-thirds of Californians with a mental illness go untreated.\footnote{California Future Health Workforce Commission, ``Workforce Report,'' \url{https://pmfmd.com/wp-content/uploads/2019/12/PMF-2019-CA-Workforce-Commission-Workforce-Rpt-Full-Rpt.pdf}, December 2019.} In 2022, the state lacked roughly one-third of the psychiatrists and therapists needed to meet projected demand.\footnote{KFF Health News, ``California Mental, Behavioral Health Workers: Medicaid Therapists, Psychiatrists,'' \url{https://kffhealthnews.org/news/article/california-mental-behavioral-health-workers-medicaid-therapists-psychiatrists/}.} Sacramento has allocated over than \$1 billion to address these shortfalls, yet funding has proven insufficient, and most resources remain concentrated in English and Spanish language services rather than in services for linguistic minorities, since the severity of the overall shortage has forced policymakers to prioritize general capacity over the needs of linguistic minority groups.\footnote{KFF Health News, ``California Mental, Behavioral Health Workers: Medicaid Therapists, Psychiatrists,'' \url{https://kffhealthnews.org/news/article/california-mental-behavioral-health-workers-medicaid-therapists-psychiatrists/}.}
+
+One of the most significant bottlenecks remains the shortage of psychiatrists, as even though the state has increased psychiatry training slots, education costs can reach \$250,000 per year and require 12 years of post-secondary education.\footnote{Healthcare Innovation Group, ``CA Behavioral Health's Workforce Shortage Remains a Growing Concern,'' \url{https://www.hcinnovationgroup.com/population-health-management/behavioral-health/news/55308209/ca-behavioral-healths-workforce-shortage-remains-a-growing-concern}.} In 2025, only 239 first-year residents enrolled in California psychiatry programs, less than half of the 527 annual residents that the state's workforce commission estimates will be necessary between 2025 and 2029 to keep up with existing demand.\footnote{Healthcare Innovation Group, ``CA Behavioral Health's Workforce Shortage Remains a Growing Concern,'' \url{https://www.hcinnovationgroup.com/population-health-management/behavioral-health/news/55308209/ca-behavioral-healths-workforce-shortage-remains-a-growing-concern}.}
+
+The central question, therefore, is how California can reduce this backlog in psychiatric care while also providing targeted support for bilingual mental health workers who are essential for reaching underserved communities.
+
+\end{multicols} % End of the two-column environment for Section 2
+
+\newpage
+
+% Update header for Section 3 (after newpage so it applies to the new page)
+\fancyhead[R]{%
+  % Circles on the right, then page number - all vertically centered
+  % Circle number is controlled by section - updates automatically via fancyhead
+  \raisebox{\dimexpr-0.5\height+1pt\relax}{%
+    \sectioncircles{3}\hspace{0.3cm}% Circle 3 filled for Consensus & Comparisons
+    \thepage%
+  }%
+}
+
+\section*{Consensus \& Comparisons}
+
+\begin{multicols}{2} % Start of the two-column environment for Section 3
+
+\subsection*{Academic Consensus}
+
+The United States of America has seen an increase in its bilingual population. The number of people speaking a non-English language at home tripled between 1980 and 2019, and rose from 23.1 million (\textasciitilde 1 in 10) to 67.8 million (\textasciitilde 1 in 5).\footnote{Springer, ``Bilingual Counseling Research,'' \url{https://link.springer.com/article/10.1007/s10447-025-09616-0}, 2025.} Over 350 languages are spoken in the United States, including 150 native North American languages.\footnote{National Board for Certified Counselors, ``What Is Known About Bilingual Counseling: A Systematic Review of the Literature,'' \url{https://tpcjournal.nbcc.org/what-is-known-about-bilingual-counseling-a-systematic-review-of-the-literature/}.} Given this increase, the role of bilingualism in the context of behavioral therapy and mental health counseling has been increasingly spotlighted. Often, people with Limited English Proficiency (LEP) struggle to receive adequate help, owing to a lack of services or information.\footnote{California Behavioral Health Services Oversight and Accountability Commission, ``Immigrant Mental Health,'' \url{https://bhsoac.ca.gov/sites/default/files/documents/2019-03/CPEHN_Immigrant_Mental_Health_combined.pdf}, March 2019.} Research suggests bilingual counseling could greatly improve the effectiveness of behavioral therapy and mental health institutions, but faces significant logistical issues.
+
+In general, bilingual counseling tends to be underrepresented in academic literature. A literature review conducted in 2025 found only eighteen articles that met the necessary standards for review published between 2013 and 2023.\footnotemark[24] Although these articles had varying methodologies, with small sample sizes and primarily qualitative data, the effectiveness of counseling is difficult to quantify. Additionally, due to the personal nature of the subject matter, bilingual counseling is a difficult topic to gather data on. The findings of this literature can be distilled into three main stakeholders that would be affected by bilingual counseling: counselors, clients, and managers.
+
+Both counselors and clients see huge potential benefits. A majority of counselors and clients feel potential for better client-counselor connections, and language switching has been shown to empower clients in counseling settings.\footnotemark[25] However, there are key logistical hurdles to implementing bilingual counseling. The first and foremost hurdle is that, due to a lack of standardization, many bilingual counselors are not formally trained in counseling in a second language. Owing to this, counselors can face anxiety counseling in a language they are not as familiar with, and don't necessarily know when to switch languages.\footnotemark[25] Different dialects could also hinder client-counselor connections.\footnotemark[24] Additionally, from a management perspective, bilingual counseling can expand a counseling organization's ability to serve demographics it may not otherwise reach, and hiring multilingual supervisors may increase the effectiveness and usage of multilingual counseling skills.
+
+To resolve the ``significant shortage''\footnotemark[25] in bilingual counseling training programs, clear state guidelines should be established to evaluate competency in bilingual counseling provision, which requires training in major languages of interest, cultural immersion, and community engagement.\footnotemark[25] The state would likely need to fund these training programs and ensure widespread accessibility.
+
+Outreach would need to be conducted to immigrant communities to ensure adequate service. Particularly in the case of undocumented clients, many organizations suffer confusion or fear when serving this demographic, and vice versa---many undocumented immigrants do not seek service due to their status.\footnotemark[26] Awareness regarding policies would need to be raised, as providing this service is legal within the state of California. Partnerships with legal aid organizations and other such community-based organizations also show promise, as undocumented immigrants often rely on these organizations' services.
+
+\subsection*{Comparative Policy Solutions}
+
+In Massachusetts, the MA Repay and Behavioral Health Workforce Scholarship programs provided \$10 million in awards to hundreds of behavioral health workers in 2024. Students received the funds in exchange for service in high-need settings upon completion of their studies. The programs prioritized workers serving youth and working in underserved areas. The MA Pay program has awarded a total over \$151.9 million to 3,156 workers since August 2023.\footnote{Massachusetts Office of Governor, ``Healey-Driscoll Administration Awarding Nearly \$10 Million in Student Loan Repayment to Hundreds of Mental Health Care Workers,'' \url{https://www.mass.gov/news/healey-driscoll-administration-awarding-nearly-10-million-in-student-loan-repayment-to-hundreds-of-mental-health-care-workers}, 2024.} Similarly, in its last round New York's Community Mental Health Loan Repayment Program (CMHLRP) supported more than 400 behavioral health professionals with up to \$30,000 in funding (up to \$120,000 for psychiatrists) to each awardee in return for a three-year obligation to service to youth patients after licensure.\footnote{New York State Office of Mental Health, ``Community Mental Health Loan Repayment Program Round 5,'' \url{https://omh.ny.gov/omhweb/rfp/2025/cmhlrp_round5/cmhlrp_round5_overview.pdf}, 2025.} The state's 2024-25 budget allowed a \$4 million expansion to the program, and \$9.6 million has been allocated to loan repayment by the program since its formation in 2022.\footnote{New York State Higher Education Services Corporation, ``Governor Hochul Announces Loan Repayment Program Expansion for Mental Health,'' \url{https://www.hesc.ny.gov/about/news-releases/governor-hochul-announces-loan-repayment-program-expansion-mental-health}.}
+
+Focused specifically on rural areas, the Minnesota Office of Rural Health and Primary Care has increased worker retention in underserved areas through loan forgiveness grants. Awardees must be fully-licensed and are assigned work for at least two or three years, per a service contract.\footnote{Minnesota Department of Health, ``Office of Rural Health and Primary Care: Loan Forgiveness Programs,'' \url{https://www.health.state.mn.us/facilities/ruralhealth/funding/loans/index.html}.} In an evaluation of the program through an analysis of nearly 150,000 licensed providers, loan forgiveness recipients were shown to be more likely to practice in rural and small town communities than non-recipients, and professionals who grew up in such areas are staying to work in them in 38\% of cases (compared to the 17\% rate among non-recipients), successfully redistributing the behavioral health workforce across the state.\footnote{Indiana University ScholarWorks, ``Rural Health Workforce Study,'' \url{https://scholarworks.indianapolis.iu.edu/server/api/core/bitstreams/6d93d032-4c04-4332-a865-e98761dcc429/content}.}
+
+Indiana runs a similar loan assistance program to those of Massachusetts, New York, and Minnesota, with nearly 40\% of recipients falling into the categories of ``mental health counselor,'' ``social worker,'' or ``clinical social worker.'' In a recipient survey, 29 professionals specifically cited the benefits of the financial support, and 19 said the loan program allowed them to pursue their desired career in behavioral health and addiction counseling.\footnotemark[28]
+
+In conclusion, state-based investment into loan assistance and repayment for behavioral health professionals has been widespread in recent years, and these programs have been successful in expanding the workforce in rural and underserved areas and breaking down the financial barrier to behavioral health careers. Therefore, it would be beneficial for California to increase its investments in loan repayment programs for California residents training to become licensed behavioral health counselors serving underserved in-state communities, as the state's size demands greater funding for success with respect to programs in other states. However, the state would benefit by emphasizing a focus on loans to bilingual trainees.
+
+\end{multicols} % End of the two-column environment
+
+\newpage
+
+% Update header for Section 4 (after newpage so it applies to the new page)
+\fancyhead[R]{%
+  % Circles on the right, then page number - all vertically centered
+  \raisebox{\dimexpr-0.5\height+1pt\relax}{%
+    \sectioncircles{4}\hspace{0.3cm}% Circle 4 filled for Recommendations
+    \thepage%
+  }%
+}
+
+\section*{Recommendations}
+
+\begin{multicols}{2} % Start of the two-column environment for Section 4
+
+\noindent\recommendationnum{1}\textbf{Establish a Bilingual Counseling Loan Assistance Program (BCLAP) under the California Health and Human Services Agency to provide loan forgiveness for behavioral health counselors who commit to three years of service in underserved counties.}
+
+In order to meet the specific demands of bilingual residents across California, we recommend the establishment of the Bilingual Counseling Loan Assistance Program. Similar in structure to other state-run healthcare training loan assistance programs nationwide, the program will run under supervision of the California Health and Human Services Agency and will focus on loan forgiveness to individuals training to be certified behavioral health counselors, under the condition that they meet a 3-year service obligation in an assigned underserved county.
+
+To be eligible, applicants for the BCLAP must present fluency in one of California's 8 most common Low English Proficiency (LEP) languages. If accepted, participants will follow the program's training guidelines to earn certification as practitioners of non-English counseling. Before certification, participants must have completed all requirements of the standardized curricula outlined by the state committee, which will be established alongside the BCLAP.
+
+After completion of certification, program participants will serve for 3 years in a California county where their language of practice is one of the county's top 3 LEP languages or where the language is spoken by at least 2\% of the population. Once their 3 years of service is complete, practitioners have the ability to practice elsewhere or to continue in the county in which they served their commitment.
+
+\vspace{0.5em}
+
+\noindent\recommendationnum{2}\textbf{Create a state committee to standardize bilingual counseling curricula and establish pathways to licensure specifically in bilingual counseling.}
+
+To facilitate the standardization of bilingual counseling, training for client-facing roles in mental health should be standardized. Although psychologists, clinical social workers, and professional clinical counselors must complete coursework in specific topics prior to licensure, legislation tends to lack standardization regarding the topics to be covered within course curricula. We recommend implementing more specific requirements in mental health regulation, which would decrease ambiguity between training programs as to what topics counselors learn, ensuring all counselors meet the same standards. Additionally, some topics provide the option of training or applied experience. Those who elect to complete their requirements through applied experience should also be required to complete some basic coursework.
+
+After training curricula are standardized, we recommend that a state committee of experts in bilingual counseling, including bilingual counselors, academic researchers, and policy experts, create pathways to licensure specifically in bilingual counseling. Courses should be taught in non-English languages to facilitate cultural immersion, and emphasis should be placed on cultural immersion and community engagement so bilingual counselors can better understand the cultures and communities they will serve. The curriculum should also address critical issues current bilingual counselors face, including but not limited to language selection and switching, dialects of languages, power dynamics related to language switching, and group counseling in multilingual settings.
+
+\vspace{0.5em}
+
+\noindent\recommendationnum{3}\textbf{Conduct formal needs assessments every five to ten years to gauge behavioral healthcare demand and tailor services to linguistically diverse populations.}
+
+To better understand the needs of mental health communities that speak a language other than English, we recommend conducting a formal needs assessment. The assessment would contain both quantitative and qualitative questions, and collect data on demographics, such as city/county, language spoken, race/ethnicity, and country of origin. It would also collect data on key barriers (e.g., language, stigma), cultural competencies (e.g., are services offered in the required languages, do counselors understand cultural differences), and awareness of the resources available to immigrant and undocumented communities. This would resolve the current lack of information regarding these patients, enabling the state to tailor mental health services more effectively to these populations.
+
+The state should partner with community-based and legal aid organizations to implement the survey. This would be particularly helpful in reaching undocumented immigrants and other such groups, since undocumented immigrants in particular depend on legal aid organizations for resources, and often fear reaching out for mental health services due to uncertainty regarding the protections they are afforded. By partnering with legal aid organizations, the state can raise awareness for these demographics regarding the services they are legally offered by the state, while reaching out to a demographic that may be more inaccessible.
+
+Once the survey is conducted and measures are implemented, the formal needs assessment should be conducted every five to ten years to track performance against key indicators. Following the data, the panel of experts should recommend modifications to the requirements regarding counseling and bilingual counseling services, and these changes should be brought to the legislature for consideration.
+
+\vspace{0.5em}
+
+\noindent\recommendationnum{4}\textbf{Implement a structured evaluation framework to track the effectiveness of BCLAP, including supply metrics, patient outcomes, and retention rates.}
+
+To track the effectiveness of the Bilingual Counseling Loan Assistance Program (BCLAP), we recommend the implementation of a structured evaluation framework that extends beyond existing standard measurements referenced in the preceding pages. Crucial to the evaluation process is the measurement of the supply of bilingual behavioral health professionals across the state, which will collect the number of program participants taking advantage of the BCLAP, which language certifications candidates are working on, and where these trainees plan on or are providing bilingual services. Additionally, should there be a service obligation period, retention rates after service obligation periods should be calculated to determine whether practitioners have remained in the California behavioral health workforce, providing insight into whether BCLAP fosters long-term stability or falls short of sustaining workforce capacity.
+
+The number of patients served each year in a given language should be benchmarked against existing data to track increases by language group, enabling a clear measurement of the impact of expanding the pool of counselors able to provide services in that language. Tracking the proportion of services delivered in Medi-Cal threshold languages will align with the language equity goals established in the BHSP and BH-Connect initiatives, while evaluators can measure the growth of telehealth participation among program beneficiaries thanks to the telehealth infrastructure developed under the CYBHI. Collectively, these evaluation measures would allow the state to determine whether the loan assistance program meaningfully strengthens the bilingual behavioral health workforce and expands equal access to mental health care for California's linguistically diverse populations. After the BCLAP's initial trial period elapses, lawmakers will be better positioned to come to a verdict on the policy, or at the very least, have more data to work with in addressing the ongoing issue.
+
+In addition to supply-side indicators, evaluations should examine the program's effectiveness in improving access to care for residents with LEP. Using standardized reporting mechanisms from participating clinics and counties, evaluators should monitor the number of patient encounters conducted by BCLAP participants and track increases in bilingual service delivery across Medi-Cal and county behavioral health programs. Anonymous post-visit surveys could be adopted to track patient satisfaction or identify shortcomings in the system, while also making patients feel more included in the decision-making process surrounding bilingual mental health treatment.
+
+\vspace{0.5em}
+
+\noindent\recommendationnum{5}\textbf{Enable virtual counseling opportunities for BCLAP participants to serve clients in top 15 LEP languages with a 25\% cap on external clientele during the service commitment period.}
+
+In order to provide equitable counseling access to all California residents, we recommend implementing virtual counseling as a pathway for individuals who require counseling in a language that is among the state's top 15 LEPs but inaccessible (or in a service shortage) in their county of residence. This is particularly critical for residents speaking a language outside of the top 3 LEP languages in their county, of which the BCLAP already focuses on meeting demand. Virtual counseling has become a popular source of care for patients nationwide, including in California, and this alternative ensures that the BCLAP allows for a viable telehealth avenue to serve California residents who would otherwise be excluded from the benefits of the program.
+
+However, in order to ensure that professionals in the BCLAP focus on their 3-year commitment of service to their assigned area, we recommend that only up to 25\% of clients served by a BCLAP participant during their 3-year commitment be virtual clients residing outside of their county of service. Services to external clients would only be allowed if (1) the counseling service is conducted virtually and (2) the client's language is not served by the loan assistance program in the client's county of residence.
+
+\end{multicols} % End of the two-column environment
+
+\end{document}
